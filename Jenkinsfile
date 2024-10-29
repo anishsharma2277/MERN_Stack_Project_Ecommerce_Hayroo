@@ -1,48 +1,32 @@
 pipeline {
     agent any
-
     environment {
-        REPO_URL = 'https://github.com/anishsharma2277/MERN_Stack_Project_Ecommerce_Hayroo.git'
-        IMAGE_NAME = 'anishsharma13/hayroo-ecommerce'
+        DOCKER_HUB_CREDENTIALS = credentials('docker-credentials-id')
     }
-
     stages {
         stage('Clone Repository') {
             steps {
-                git credentialsId: 'your-github-credentials-id', url: "${REPO_URL}"
+                git credentialsId: 'your-github-credentials-id', url: 'https://github.com/anishsharma2277/MERN_Stack_Project_Ecommerce_Hayroo.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh 'docker build -t ${IMAGE_NAME} .'
-                }
+                bat 'docker build -t your-docker-image-name .'
             }
         }
-
         stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', 
-                 usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                }
+                bat 'docker login -u %DOCKER_HUB_CREDENTIALS_USR% -p %DOCKER_HUB_CREDENTIALS_PSW%'
             }
         }
-
         stage('Push Docker Image') {
             steps {
-                script {
-                    sh 'docker push ${IMAGE_NAME}'
-                }
+                bat 'docker push your-docker-image-name'
             }
         }
-
         stage('Deploy Application') {
             steps {
-                script {
-                    echo 'Deployment steps go here. For example, running docker-compose or kubectl commands.'
-                }
+                bat 'your-deployment-command'
             }
         }
     }
