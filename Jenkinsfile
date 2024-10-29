@@ -1,32 +1,33 @@
 pipeline {
     agent any
+
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                // Specify the master branch
-                git branch: 'master', url: 'https://github.com/anishsharma2277/MERN_Stack_Project_Ecommerce_Hayroo.git'
+                git 'https://github.com/anishsharma2277/MERN_Stack_Project_Ecommerce_Hayroo.git'
             }
         }
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
-                script { it ->  // Explicitly define the closure parameter
-                    // Add your Docker build commands here
-                    // Example: sh 'docker build -t your-image-name .'
+                script {
+                    // Build your Docker image
+                    sh 'docker build -t your_image_name .'
                 }
             }
         }
-        stage('Push Docker Image') {
+        stage('Test') {
             steps {
-                script { it ->  // Explicitly define the closure parameter
-                    // Add your Docker push commands here
-                    // Example: sh 'docker push your-image-name'
+                script {
+                    // Add your testing commands here
+                    echo 'Testing...'
                 }
             }
         }
         stage('Deploy') {
             steps {
-                script { it ->  // Explicitly define the closure parameter
-                    // Add your deployment commands here
+                script {
+                    // Run the Docker container
+                    sh 'docker run -d -p 80:80 your_image_name'
                 }
             }
         }
