@@ -1,32 +1,33 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-credentials-id')
-    }
     stages {
         stage('Clone Repository') {
             steps {
-                git credentialsId: 'your-github-credentials-id', url: 'https://github.com/anishsharma2277/MERN_Stack_Project_Ecommerce_Hayroo.git'
+                // Specify the master branch
+                git branch: 'master', url: 'https://github.com/anishsharma2277/MERN_Stack_Project_Ecommerce_Hayroo.git'
             }
         }
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t your-docker-image-name .'
-            }
-        }
-        stage('Login to Docker Hub') {
-            steps {
-                bat 'docker login -u %DOCKER_HUB_CREDENTIALS_USR% -p %DOCKER_HUB_CREDENTIALS_PSW%'
+                script { it ->  // Explicitly define the closure parameter
+                    // Add your Docker build commands here
+                    // Example: sh 'docker build -t your-image-name .'
+                }
             }
         }
         stage('Push Docker Image') {
             steps {
-                bat 'docker push your-docker-image-name'
+                script { it ->  // Explicitly define the closure parameter
+                    // Add your Docker push commands here
+                    // Example: sh 'docker push your-image-name'
+                }
             }
         }
-        stage('Deploy Application') {
+        stage('Deploy') {
             steps {
-                bat 'your-deployment-command'
+                script { it ->  // Explicitly define the closure parameter
+                    // Add your deployment commands here
+                }
             }
         }
     }
